@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 interface CountdownProps {
@@ -6,45 +5,13 @@ interface CountdownProps {
 }
 
 export default function Countdown({ onNext }: CountdownProps) {
-  const [elapsedTime, setElapsedTime] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    // Patokan: Jam 00:00:00 Hari Ini (Jam 12 Malam Tadi)
-    const now = new Date();
-    const targetDate = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      0,
-      0,
-      0
-    );
-
-    const updateTimer = () => {
-      const currentTime = new Date().getTime();
-      // HITUNG MAJU: Selisih waktu sekarang dikurangi jam 12 malam tadi
-      const difference = currentTime - targetDate.getTime();
-
-      if (difference >= 0) {
-        const d = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((difference % (1000 * 60)) / 1000);
-
-        setElapsedTime({ days: d, hours: h, minutes: m, seconds: s });
-      }
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  // Angka langsung di-set ke 00
+  const timerItems = [
+    { label: "HARI", value: "00" },
+    { label: "JAM", value: "00" },
+    { label: "MENIT", value: "00" },
+    { label: "DETIK", value: "00" },
+  ];
 
   return (
     <motion.section
@@ -80,28 +47,23 @@ export default function Countdown({ onNext }: CountdownProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        Waktu berlalu sejak ulang tahunmu dimulai...
+        Saatnya membuka kado spesialmu...
       </motion.p>
 
-      {/* Timer Cards (Bertambah Tiap Detik) */}
+      {/* Timer Cards (Semua 00) */}
       <motion.div
         className="grid grid-cols-4 gap-2 sm:gap-4 max-w-md w-full mb-10"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.6 }}
       >
-        {[
-          { label: "HARI", value: elapsedTime.days },
-          { label: "JAM", value: elapsedTime.hours },
-          { label: "MENIT", value: elapsedTime.minutes },
-          { label: "DETIK", value: elapsedTime.seconds },
-        ].map((item, index) => (
+        {timerItems.map((item, index) => (
           <div
             key={index}
             className="bg-[rgba(255,255,255,0.05)] border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur-md shadow-lg flex flex-col items-center justify-center"
           >
             <span className="font-display text-2xl sm:text-4xl text-[var(--pink-main,#f472b6)] font-bold">
-              {String(item.value).padStart(2, "0")}
+              {item.value}
             </span>
             <span className="text-[9px] sm:text-xs text-white/50 tracking-wider mt-1 font-semibold">
               {item.label}
