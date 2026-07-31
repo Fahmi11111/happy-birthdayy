@@ -41,14 +41,14 @@ export default function VideoSection({ onNext }: VideoSectionProps) {
         {/* Aspect ratio diubah ke 9:16 (Portrait) */}
         <div className="relative rounded-2xl overflow-hidden aspect-[9/16] bg-black flex items-center justify-center shadow-inner">
           <video
-            src="/public/video1.mp4"
-            controls
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-cover rounded-2xl"
-          >
-            Browser kamu tidak mendukung pemutar video ini.
-          </video>
+  src="/video1.mp4"
+  controls
+  playsInline
+  preload="metadata"
+  className="w-full h-full object-cover rounded-2xl"
+>
+  Browser kamu tidak mendukung pemutar video ini.
+</video>
         </div>
       </motion.div>
 
