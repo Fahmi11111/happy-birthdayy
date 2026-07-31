@@ -6,20 +6,16 @@ interface CountdownProps {
 }
 
 export default function Countdown({ onNext }: CountdownProps) {
-  const [timeLeft, setTimeLeft] = useState({
+  const [elapsedTime, setElapsedTime] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
-  const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
-    // SET TANGGAL ULANG TAHUN DI SINI (Contoh: Jam 00:00 hari ini)
-    // Karena sudah lewat jam 12 malam, kita set target ke waktu yang sudah lewat
+    // Patokan: Jam 00:00:00 Hari Ini (Jam 12 Malam Tadi)
     const now = new Date();
-    
-    // Target adalah jam 00:00:00 hari ini
     const targetDate = new Date(
       now.getFullYear(),
       now.getMonth(),
@@ -31,20 +27,16 @@ export default function Countdown({ onNext }: CountdownProps) {
 
     const updateTimer = () => {
       const currentTime = new Date().getTime();
-      const difference = targetDate.getTime() - currentTime;
+      // HITUNG MAJU: Selisih waktu sekarang dikurangi jam 12 malam tadi
+      const difference = currentTime - targetDate.getTime();
 
-      // Jika waktu target SUDAH LEWAT (Sudah masuk hari H / lewat jam 12 malam)
-      if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        setIsUnlocked(true); // Otomatis aktifkan tombol
-      } else {
+      if (difference >= 0) {
         const d = Math.floor(difference / (1000 * 60 * 60 * 24));
         const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((difference % (1000 * 60)) / 1000);
 
-        setTimeLeft({ days: d, hours: h, minutes: m, seconds: s });
-        setIsUnlocked(false);
+        setElapsedTime({ days: d, hours: h, minutes: m, seconds: s });
       }
     };
 
@@ -69,17 +61,17 @@ export default function Countdown({ onNext }: CountdownProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        MENGHITUNG HARI
+        HARI SPESIAL TELAH TIBA
       </motion.p>
 
       {/* Main Title */}
       <motion.h1
-        className="font-display text-3xl sm:text-5xl md:text-6xl text-white font-light mb-2 leading-tight"
+        className="font-display text-3xl sm:text-5xl md:text-6xl text-white font-light mb-2 leading-tight drop-shadow-lg"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        {isUnlocked ? "Her Special Day is Here! 🎉" : "Her Special Day is Coming"}
+        Her Special Day is Here! 🎉
       </motion.h1>
 
       <motion.p
@@ -88,10 +80,10 @@ export default function Countdown({ onNext }: CountdownProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        {isUnlocked ? "Saatnya membuka kado spesialmu..." : "Sesuatu yang indah sedang menunggumu"}
+        Waktu berlalu sejak ulang tahunmu dimulai...
       </motion.p>
 
-      {/* Timer Cards */}
+      {/* Timer Cards (Bertambah Tiap Detik) */}
       <motion.div
         className="grid grid-cols-4 gap-2 sm:gap-4 max-w-md w-full mb-10"
         initial={{ scale: 0.9, opacity: 0 }}
@@ -99,10 +91,10 @@ export default function Countdown({ onNext }: CountdownProps) {
         transition={{ delay: 0.6 }}
       >
         {[
-          { label: "HARI", value: timeLeft.days },
-          { label: "JAM", value: timeLeft.hours },
-          { label: "MENIT", value: timeLeft.minutes },
-          { label: "DETIK", value: timeLeft.seconds },
+          { label: "HARI", value: elapsedTime.days },
+          { label: "JAM", value: elapsedTime.hours },
+          { label: "MENIT", value: elapsedTime.minutes },
+          { label: "DETIK", value: elapsedTime.seconds },
         ].map((item, index) => (
           <div
             key={index}
@@ -118,7 +110,7 @@ export default function Countdown({ onNext }: CountdownProps) {
         ))}
       </motion.div>
 
-      {/* Action Button */}
+      {/* Action Button (Langsung Aktif & Menyala) */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -126,11 +118,7 @@ export default function Countdown({ onNext }: CountdownProps) {
       >
         <button
           onClick={onNext}
-          className={`px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-xl ${
-            isUnlocked
-              ? "bg-[var(--pink-main,#f472b6)] text-white hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_25px_rgba(244,114,182,0.5)]"
-              : "bg-white/20 text-white/40 cursor-not-allowed"
-          }`}
+          className="px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-xl bg-[var(--pink-main,#f472b6)] text-white hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_25px_rgba(244,114,182,0.5)]"
         >
           OPEN HER GIFT 🎁
         </button>
