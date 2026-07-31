@@ -56,7 +56,7 @@ function App() {
           <Countdown
             key="countdown"
             targetDate={getMidnightTarget()}
-            onComplete={handleCountdownComplete}
+            onNext={handleCountdownComplete}
           />
         );
       case "gift":
