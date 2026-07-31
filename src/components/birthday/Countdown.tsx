@@ -5,13 +5,19 @@ interface CountdownProps {
 }
 
 export default function Countdown({ onNext }: CountdownProps) {
-  // Angka langsung di-set ke 00
+  // Angka di-set ke 00
   const timerItems = [
     { label: "HARI", value: "00" },
     { label: "JAM", value: "00" },
     { label: "MENIT", value: "00" },
     { label: "DETIK", value: "00" },
   ];
+
+  const handleClick = () => {
+    if (typeof onNext === "function") {
+      onNext();
+    }
+  };
 
   return (
     <motion.section
@@ -72,14 +78,16 @@ export default function Countdown({ onNext }: CountdownProps) {
         ))}
       </motion.div>
 
-      {/* Action Button (Langsung Aktif & Menyala) */}
+      {/* Action Button */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.8 }}
+        className="relative z-50 pointer-events-auto"
       >
         <button
-          onClick={onNext}
+          type="button"
+          onClick={handleClick}
           className="px-8 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-xl bg-[var(--pink-main,#f472b6)] text-white hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_25px_rgba(244,114,182,0.5)]"
         >
           OPEN HER GIFT 🎁
